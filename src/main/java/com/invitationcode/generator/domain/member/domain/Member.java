@@ -1,6 +1,7 @@
-package com.invitationcode.generator.domain;
+package com.invitationcode.generator.domain.member.domain;
 
 
+import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -19,21 +20,29 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Comment(value = "아이디")
+    @Column(name = "id", nullable = false, unique = true)
+    private String id;
+
+    @Embedded
+    private Password password;
+
     @Comment(value = "사용자 명")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Comment(value = "비밀번호")
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Embedded
+    private Email email;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberInvitation> memberInvitations = new ArrayList<>();
 
     @Builder
-    public Member(String name, String password) {
-        this.name = name;
+    public Member(String id, Password password, String name, Email email) {
+        this.id = id;
         this.password = password;
+        this.name = name;
+        this.email = email;
     }
 
     public Long getIdx() {

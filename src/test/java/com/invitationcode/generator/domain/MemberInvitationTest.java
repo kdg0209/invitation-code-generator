@@ -1,7 +1,11 @@
 package com.invitationcode.generator.domain;
 
-import com.invitationcode.generator.repository.MemberInvitationRepository;
-import com.invitationcode.generator.repository.MemberRepository;
+import com.invitationcode.generator.domain.member.domain.Member;
+import com.invitationcode.generator.domain.member.domain.Password;
+import com.invitationcode.generator.domain.memberinvitation.domain.InviteCode;
+import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
+import com.invitationcode.generator.domain.memberinvitation.repository.MemberInvitationRepository;
+import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,9 +37,10 @@ class MemberInvitationTest {
 
     @BeforeEach
     void memberInit() {
+        Password password = new Password("12345");
         member = Member.builder()
                 .name("홍길동")
-                .password("12345")
+                .password(password)
                 .build();
 
         memberRepository.save(member);

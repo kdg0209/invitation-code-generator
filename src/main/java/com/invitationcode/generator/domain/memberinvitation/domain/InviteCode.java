@@ -1,4 +1,4 @@
-package com.invitationcode.generator.domain;
+package com.invitationcode.generator.domain.memberinvitation.domain;
 
 import org.hibernate.annotations.Comment;
 

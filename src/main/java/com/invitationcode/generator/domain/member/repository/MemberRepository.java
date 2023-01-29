@@ -1,6 +1,6 @@
-package com.invitationcode.generator.repository;
+package com.invitationcode.generator.domain.member.repository;
 
-import com.invitationcode.generator.domain.Member;
+import com.invitationcode.generator.domain.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
