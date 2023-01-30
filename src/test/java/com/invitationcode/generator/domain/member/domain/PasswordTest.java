@@ -8,19 +8,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class PasswordTest {
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
 
     @Test
     void 비밀번호_생성() {
 
         // given
-        Password password = new Password("12345");
+        Password password = new Password("12345", PASSWORD_ENCODER);
 
         // when
-        String encodedPassword = passwordEncoder.encode(password.getPassword());
+        String encodedPassword = PASSWORD_ENCODER.encode(password.getPassword());
 
         // then
-        assertThat(passwordEncoder.matches(password.getPassword(), encodedPassword)).isTrue();
+        assertThat(PASSWORD_ENCODER.matches(password.getPassword(), encodedPassword)).isTrue();
     }
 
 }

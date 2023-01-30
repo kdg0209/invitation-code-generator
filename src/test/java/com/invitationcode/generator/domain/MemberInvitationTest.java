@@ -2,15 +2,17 @@ package com.invitationcode.generator.domain;
 
 import com.invitationcode.generator.domain.member.domain.Member;
 import com.invitationcode.generator.domain.member.domain.Password;
+import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import com.invitationcode.generator.domain.memberinvitation.domain.InviteCode;
 import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
 import com.invitationcode.generator.domain.memberinvitation.repository.MemberInvitationRepository;
-import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +33,15 @@ class MemberInvitationTest {
     @Autowired
     private MemberInvitationRepository memberInvitationRepository;
 
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
     private static final Executor executor = Executors.newFixedThreadPool(150);
 
     private Member member;
 
     @BeforeEach
     void memberInit() {
-        Password password = new Password("12345");
+        Password password = new Password("12345", PASSWORD_ENCODER);
         member = Member.builder()
                 .name("홍길동")
                 .password(password)
@@ -75,17 +79,17 @@ class MemberInvitationTest {
 
         for (int i = 0; i < threadCount; i++) {
             CompletableFuture<MemberInvitation> future = CompletableFuture.supplyAsync(() -> {
-               try {
-                   InviteCode inviteCode = new InviteCode();
-                   MemberInvitation memberInvitation = MemberInvitation.builder()
-                           .receiverEmail("test1@naver.com")
-                           .inviteCode(inviteCode)
-                           .member(member)
-                           .build();
-                   return memberInvitationRepository.save(memberInvitation);
-               } finally {
-                   latch.countDown();
-               }
+                try {
+                    InviteCode inviteCode = new InviteCode();
+                    MemberInvitation memberInvitation = MemberInvitation.builder()
+                            .receiverEmail("test1@naver.com")
+                            .inviteCode(inviteCode)
+                            .member(member)
+                            .build();
+                    return memberInvitationRepository.save(memberInvitation);
+                } finally {
+                    latch.countDown();
+                }
             }, executor);
             completableFutures.add(future);
         }

@@ -7,6 +7,7 @@ import com.invitationcode.generator.domain.member.domain.Password;
 import com.invitationcode.generator.domain.member.dto.MemberCreateRequestDto;
 import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberDao memberDao;
     private final MemberRepository memberRepository;
 
     public Long create(MemberCreateRequestDto requestDto) {
         memberDao.verifyDuplicateMemberId(requestDto.getId());
 
-        Password password = new Password(requestDto.getPassword());
+        Password password = new Password(requestDto.getPassword(), passwordEncoder);
         Email email = new Email(requestDto.getEmail());
 
         Member member = Member.builder()
