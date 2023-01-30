@@ -5,6 +5,7 @@ import com.invitationcode.generator.domain.member.domain.Email;
 import com.invitationcode.generator.domain.member.domain.Member;
 import com.invitationcode.generator.domain.member.domain.Password;
 import com.invitationcode.generator.domain.member.dto.MemberCreateRequestDto;
+import com.invitationcode.generator.domain.member.dto.MemberUpdateRequestDto;
 import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,9 +32,21 @@ public class MemberService {
                 .password(password)
                 .name(requestDto.getName())
                 .email(email)
+                .nickName(requestDto.getNickName())
                 .build();
 
         memberRepository.save(member);
         return member.getIdx();
+    }
+
+    public Long update(Long memberIdx, MemberUpdateRequestDto requestDto) {
+        Member member = memberDao.findByIdx(memberIdx);
+        member.updateNickName(requestDto.getNickName());
+        return member.getIdx();
+    }
+
+    public void delete(Long memberIdx) {
+        Member member = memberDao.findByIdx(memberIdx);
+        member.delete();
     }
 }

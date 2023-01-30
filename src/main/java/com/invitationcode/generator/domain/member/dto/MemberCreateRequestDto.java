@@ -18,4 +18,6 @@ public class MemberCreateRequestDto {
 
     @NotNull
     private String email;
+
+    private String nickName;
 }
