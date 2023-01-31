@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -59,6 +60,10 @@ public class Member {
 
     public void updateNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public void changeablePassword(String oldPwd, String newPwd, PasswordEncoder passwordEncoder) {
+        this.password.changePassword(oldPwd, newPwd, passwordEncoder);
     }
 
     public void delete() {

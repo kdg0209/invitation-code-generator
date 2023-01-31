@@ -5,6 +5,7 @@ import com.invitationcode.generator.domain.member.domain.Password;
 import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import com.invitationcode.generator.domain.memberinvitation.domain.InviteCode;
 import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
+import com.invitationcode.generator.domain.memberinvitation.domain.ReceiverEmail;
 import com.invitationcode.generator.domain.memberinvitation.repository.MemberInvitationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,9 +56,8 @@ class MemberInvitationTest {
 
         // given
         InviteCode inviteCode = new InviteCode();
-
         MemberInvitation memberInvitation = MemberInvitation.builder()
-                .receiverEmail("test1@naver.com")
+                .receiverEmail(new ReceiverEmail("test1@naver.com"))
                 .inviteCode(inviteCode)
                 .member(member)
                 .build();
@@ -82,7 +82,7 @@ class MemberInvitationTest {
                 try {
                     InviteCode inviteCode = new InviteCode();
                     MemberInvitation memberInvitation = MemberInvitation.builder()
-                            .receiverEmail("test1@naver.com")
+                            .receiverEmail(new ReceiverEmail("test1@naver.com"))
                             .inviteCode(inviteCode)
                             .member(member)
                             .build();
@@ -115,7 +115,7 @@ class MemberInvitationTest {
                 try {
                     InviteCode inviteCode = new InviteCode();
                     MemberInvitation memberInvitation = MemberInvitation.builder()
-                            .receiverEmail("test1@naver.com")
+                            .receiverEmail(new ReceiverEmail("test1@naver.com"))
                             .inviteCode(inviteCode)
                             .member(member)
                             .build();
@@ -148,7 +148,7 @@ class MemberInvitationTest {
                 try {
                     InviteCode inviteCode = new InviteCode();
                     MemberInvitation memberInvitation = MemberInvitation.builder()
-                            .receiverEmail("test1@naver.com")
+                            .receiverEmail(new ReceiverEmail("test1@naver.com"))
                             .inviteCode(inviteCode)
                             .member(member)
                             .build();

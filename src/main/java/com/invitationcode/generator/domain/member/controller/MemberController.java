@@ -2,6 +2,7 @@ package com.invitationcode.generator.domain.member.controller;
 
 import com.invitationcode.generator.domain.member.dto.MemberCreateRequestDto;
 import com.invitationcode.generator.domain.member.dto.MemberFindResponseDto;
+import com.invitationcode.generator.domain.member.dto.MemberUpdatePasswordRequestDto;
 import com.invitationcode.generator.domain.member.dto.MemberUpdateRequestDto;
 import com.invitationcode.generator.domain.member.service.MemberFindService;
 import com.invitationcode.generator.domain.member.service.MemberService;
@@ -38,6 +39,12 @@ public class MemberController {
     @PutMapping("/{memberIdx}")
     public BaseResponse<Long> update(@PathVariable(value = "memberIdx") Long memberIdx, @Valid @RequestBody MemberUpdateRequestDto requestDto) {
         Long response = memberService.update(memberIdx, requestDto);
+        return new BaseResponse<>(CODE_200, response);
+    }
+
+    @PutMapping("/{memberIdx}/password")
+    public BaseResponse<Long> changeablePassword(@PathVariable(value = "memberIdx") Long memberIdx, @Valid @RequestBody MemberUpdatePasswordRequestDto requestDto) {
+        Long response = memberService.changeablePassword(memberIdx, requestDto);
         return new BaseResponse<>(CODE_200, response);
     }
 

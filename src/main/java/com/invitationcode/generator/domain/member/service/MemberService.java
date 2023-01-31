@@ -5,6 +5,7 @@ import com.invitationcode.generator.domain.member.domain.Email;
 import com.invitationcode.generator.domain.member.domain.Member;
 import com.invitationcode.generator.domain.member.domain.Password;
 import com.invitationcode.generator.domain.member.dto.MemberCreateRequestDto;
+import com.invitationcode.generator.domain.member.dto.MemberUpdatePasswordRequestDto;
 import com.invitationcode.generator.domain.member.dto.MemberUpdateRequestDto;
 import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,11 @@ public class MemberService {
     public void delete(Long memberIdx) {
         Member member = memberDao.findByIdx(memberIdx);
         member.delete();
+    }
+
+    public Long changeablePassword(Long memberIdx, MemberUpdatePasswordRequestDto requestDto) {
+        Member member = memberDao.findByIdx(memberIdx);
+        member.changeablePassword(requestDto.getOldPassword(), requestDto.getNewPassword(), passwordEncoder);
+        return member.getIdx();
     }
 }

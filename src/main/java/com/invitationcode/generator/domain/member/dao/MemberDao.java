@@ -33,6 +33,21 @@ public class MemberDao {
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION));
     }
 
+    public void verifyDuplicatedMemberEmail(String email) {
+        Integer result = queryFactory
+                .selectOne()
+                .from(member)
+                .where(
+                        member.email.email.eq(email),
+                        member.isDeleted.isFalse()
+                )
+                .fetchOne();
+
+        if (result != null) {
+            throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
     public void verifyDuplicateMemberId(String id) {
         Integer result = queryFactory
                 .selectOne()
