@@ -44,7 +44,7 @@ public class ErrorResponse {
 
         public FieldErrors(FieldError fieldError) {
             this.field = fieldError.getField();
-            this.value = (String) fieldError.getRejectedValue();
+            this.value = String.valueOf(fieldError.getRejectedValue());
             this.reason = fieldError.getDefaultMessage();
         }
     }
