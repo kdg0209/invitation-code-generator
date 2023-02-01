@@ -2,6 +2,7 @@ package com.invitationcode.generator.domain.member.domain;
 
 
 import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
+import com.invitationcode.generator.domain.orders.domain.Orders;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberInvitation> memberInvitations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Orders> orders = new ArrayList<>();
 
     @Builder
     public Member(String id, Password password, String name, Email email, String nickName) {

@@ -2,7 +2,9 @@ package com.invitationcode.generator.domain.product.domain;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
@@ -10,6 +12,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Money {
 
+    @Comment(value = "상품 금액")
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     public Money(Integer price) {
