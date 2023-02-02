@@ -7,10 +7,10 @@ import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 
-@Table
 @Entity
+@Table(name = "orders_line")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrdersList {
+public class OrdersLine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class OrdersList {
     private Integer productQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orders_idx", foreignKey = @ForeignKey(name = "ordersList_orders"))
+    @JoinColumn(name = "orders_idx", foreignKey = @ForeignKey(name = "fk_ordersList_orders"))
     private Orders orders;
 
 }

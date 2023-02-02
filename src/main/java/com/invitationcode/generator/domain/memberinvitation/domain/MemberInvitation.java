@@ -11,8 +11,8 @@ import org.hibernate.annotations.Comment;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table
-@Entity(name = "member_invitation")
+@Entity
+@Table(name = "member_invitation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberInvitation {
 
@@ -37,7 +37,7 @@ public class MemberInvitation {
 
     @Comment(value = "초대한 유저의 아이디")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_invitation_member"))
+    @JoinColumn(name = "member_idx", foreignKey = @ForeignKey(name = "fk_member_invitation_member"))
     private Member member;
 
     @Comment(value = "초대 코드 생성 시간")

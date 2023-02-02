@@ -1,7 +1,7 @@
 package com.invitationcode.generator.domain.orders.domain;
 
 import com.invitationcode.generator.domain.member.domain.Member;
-import com.invitationcode.generator.domain.orderslist.domain.OrdersList;
+import com.invitationcode.generator.domain.orderslist.domain.OrdersLine;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table
 @Entity
+@Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Orders {
 
@@ -30,9 +30,9 @@ public class Orders {
 
     @Comment(value = "주문한 유저의 아이디")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx", foreignKey = @ForeignKey(name = "orders_member"))
+    @JoinColumn(name = "member_idx", foreignKey = @ForeignKey(name = "fk_orders_member"))
     private Member member;
 
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrdersList> ordersLists = new ArrayList<>();
+    private List<OrdersLine> ordersLines = new ArrayList<>();
 }

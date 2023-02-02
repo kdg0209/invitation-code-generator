@@ -8,8 +8,8 @@ import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 
-@Table
 @Entity
+@Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 

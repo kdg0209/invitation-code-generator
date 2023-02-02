@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Table
-@Entity(name = "member")
+@Entity
+@Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -51,6 +51,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Orders> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<MemberHasCoupon> memberHasCoupons = new ArrayList<>();
 
     @Builder
     public Member(String id, Password password, String name, Email email, String nickName) {
