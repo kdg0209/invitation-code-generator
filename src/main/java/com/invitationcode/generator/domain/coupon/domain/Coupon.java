@@ -64,8 +64,21 @@ public class Coupon {
         if (expirationDateTime.isBefore(now)) {
             throw new BusinessException(ErrorCode.COUPON_EXPIRATION_DATETIME_EXCEPTION);
         }
-
         this.expirationDateTime = expirationDateTime;
+    }
+
+    public void decreaseStock(Integer stock) {
+        if (stock == null || stock < 0 || this.stock < stock) {
+            throw new BusinessException(ErrorCode.BIG_REQUEST_STOCK_THAN_COUPON_STOCK_EXCEPTION);
+        }
+        this.stock -= stock;
+    }
+
+    public void verifyExpirationDateTimeValidator() {
+        LocalDateTime now = LocalDateTime.now();
+        if (this.expirationDateTime.isBefore(now)) {
+            throw new BusinessException(ErrorCode.COUPON_EXPIRATION_DATETIME_GIVEN_EXCEPTION);
+        }
     }
 
     private void setStock(Integer stock) {

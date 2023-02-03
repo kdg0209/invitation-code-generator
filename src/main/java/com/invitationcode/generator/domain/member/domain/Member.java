@@ -1,6 +1,7 @@
 package com.invitationcode.generator.domain.member.domain;
 
 
+import com.invitationcode.generator.domain.coupon.domain.Coupon;
 import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
 import com.invitationcode.generator.domain.orders.domain.Orders;
 import lombok.AccessLevel;
@@ -52,7 +53,7 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Orders> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberHasCoupon> memberHasCoupons = new ArrayList<>();
 
     @Builder
@@ -79,5 +80,14 @@ public class Member {
 
     public String getEmail() {
         return this.email.getEmail();
+    }
+
+    public void addCoupon(Coupon coupon, Integer stock) {
+        MemberHasCoupon memberHasCoupon = MemberHasCoupon.builder()
+                .member(this)
+                .coupon(coupon)
+                .stock(stock)
+                .build();
+        this.memberHasCoupons.add(memberHasCoupon);
     }
 }

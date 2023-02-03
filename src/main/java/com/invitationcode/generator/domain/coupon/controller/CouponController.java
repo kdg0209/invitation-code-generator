@@ -1,6 +1,7 @@
 package com.invitationcode.generator.domain.coupon.controller;
 
 import com.invitationcode.generator.domain.coupon.dto.CouponCreateRequestDto;
+import com.invitationcode.generator.domain.coupon.dto.CouponGivenRequestDto;
 import com.invitationcode.generator.domain.coupon.dto.CouponUpdateRequestDto;
 import com.invitationcode.generator.domain.coupon.service.CouponService;
 import com.invitationcode.generator.global.response.BaseResponse;
@@ -29,5 +30,11 @@ public class CouponController {
     public BaseResponse<Long> update(@PathVariable(value = "couponIdx") Long couponIdx, @Valid @RequestBody CouponUpdateRequestDto requestDto) {
         Long response = couponService.update(couponIdx, requestDto);
         return new BaseResponse<>(CODE_200, response);
+    }
+
+    @PostMapping("/{couponIdx}/given")
+    public BaseResponse<Long> given(@PathVariable(value = "couponIdx") Long couponIdx, @Valid @RequestBody CouponGivenRequestDto requestDto) {
+        Long response = couponService.given(couponIdx, requestDto);
+        return new BaseResponse<>(CODE_201, response);
     }
 }

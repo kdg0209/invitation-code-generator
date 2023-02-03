@@ -23,15 +23,15 @@ public class MemberHasCoupon {
     private Integer stock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx", foreignKey = @ForeignKey(name = "fk_member_has_coupon_member"))
+    @JoinColumn(name = "member_idx", nullable = false, foreignKey = @ForeignKey(name = "fk_member_has_coupon_member"))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_idx", foreignKey = @ForeignKey(name = "fk_member_has_coupon_coupon"))
+    @JoinColumn(name = "coupon_idx", nullable = false, foreignKey = @ForeignKey(name = "fk_member_has_coupon_coupon"))
     private Coupon coupon;
 
     @Comment(value = "사용일자")
-    @Column(name = "used_date", nullable = false)
+    @Column(name = "used_date")
     private LocalDateTime usedDate;
 
     @Comment(value = "생성일자")
@@ -39,11 +39,10 @@ public class MemberHasCoupon {
     private LocalDateTime createdDate;
 
     @Builder
-    public MemberHasCoupon(Integer stock, Member member, Coupon coupon, LocalDateTime usedDate, LocalDateTime createdDate) {
-        this.stock = stock;
+    public MemberHasCoupon(Member member, Coupon coupon, Integer stock) {
         this.member = member;
         this.coupon = coupon;
-        this.usedDate = usedDate;
-        this.createdDate = createdDate;
+        this.stock = stock;
+        this.createdDate = LocalDateTime.now();
     }
 }
