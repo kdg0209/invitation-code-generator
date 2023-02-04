@@ -1,13 +1,14 @@
 package com.invitationcode.generator.domain.product.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import com.invitationcode.generator.global.exception.BusinessException;
+import com.invitationcode.generator.global.exception.ErrorCode;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
+@Getter
 @Entity
 @Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,8 +40,8 @@ public class Product {
         setStock(stock);
     }
 
-    public Long getIdx() {
-        return idx;
+    public BigDecimal getMoney() {
+        return money.getPrice();
     }
 
     public void updateName(@NonNull String name) {
@@ -49,6 +50,13 @@ public class Product {
 
     public void updateStock(@NonNull Integer stock) {
         setStock(stock);
+    }
+
+    public void decreaseStock(Integer productBuyQuantity) {
+        if (productBuyQuantity == null || this.stock < productBuyQuantity) {
+            throw new BusinessException(ErrorCode.BIG_REQUEST_QUANTITY_THAN_PRODUCT_STOCK_EXCEPTION);
+        }
+        this.stock -= productBuyQuantity;
     }
 
     public void updateMoney(Integer price) {

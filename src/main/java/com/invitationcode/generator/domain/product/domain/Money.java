@@ -1,6 +1,7 @@
 package com.invitationcode.generator.domain.product.domain;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
@@ -8,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
+@Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Money {

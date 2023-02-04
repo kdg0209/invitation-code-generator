@@ -86,7 +86,10 @@ public class Member {
         MemberHasCoupon memberHasCoupon = MemberHasCoupon.builder()
                 .member(this)
                 .coupon(coupon)
-                .stock(stock)
+                .couponName(coupon.getName())
+                .couponSalePrice(coupon.getMoney())
+                .couponStock(stock)
+                .couponExpirationDateTime(coupon.getExpirationDateTime())
                 .build();
         this.memberHasCoupons.add(memberHasCoupon);
     }

@@ -2,15 +2,14 @@ package com.invitationcode.generator.domain.coupon.domain;
 
 import com.invitationcode.generator.global.exception.BusinessException;
 import com.invitationcode.generator.global.exception.ErrorCode;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "coupon")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,8 +42,8 @@ public class Coupon {
         setStock(stock);
     }
 
-    public Long getIdx() {
-        return idx;
+    public BigDecimal getMoney() {
+        return money.getSalePrice();
     }
 
     public void updateName(String name) {

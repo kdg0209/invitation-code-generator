@@ -1,6 +1,7 @@
 package com.invitationcode.generator.domain.orders.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
@@ -29,4 +30,12 @@ public class ShippingInfo {
     @Comment(value = "배송 요청 사항")
     @Column(name = "message", nullable = false)
     private String message;
+
+    @Builder
+    public ShippingInfo(Integer zipcode, String address, String addressDetail, String message) {
+        this.zipcode = zipcode;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.message = message;
+    }
 }
