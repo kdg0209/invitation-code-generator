@@ -63,14 +63,14 @@ public class MemberInvitation {
     }
 
     public Long getIdx() {
-        return idx;
+        return this.idx;
     }
 
     public void verifyAlreadyCompletedOrAlreadyRejected() {
-        if (inviteStatus == InviteStatus.COMPLETED) {
+        if (this.inviteStatus == InviteStatus.COMPLETED) {
             throw new BusinessException(ErrorCode.MEMBER_INVITATION_ALREADY_COMPLETED);
         }
-        if (inviteStatus == InviteStatus.REJECTED) {
+        if (this.inviteStatus == InviteStatus.REJECTED) {
             throw new BusinessException(ErrorCode.MEMBER_INVITATION_ALREADY_REJECTED);
         }
     }

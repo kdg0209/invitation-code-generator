@@ -51,16 +51,26 @@ public class OrdersService {
                 .shippingInfo(shippingInfo)
                 .build();
 
-        OrdersMoney zeroOrdersMoney = OrdersMoney.ZERO;
-        for (ProductPurchaseListRequestDto productPurchaseDTO : requestDto.getProductPurchaseList()) {
-            Product product = productDao.findByIdx(productPurchaseDTO.getProductIdx());
-            PurchaseMoney purchaseMoney = orders.addOrdersLineAndReturnPurchaseTotalMoney(product, productPurchaseDTO.getProductBuyQuantity());
-            zeroOrdersMoney = zeroOrdersMoney.plus(purchaseMoney.getPurchaseMoney());
-        }
-
-        orders.statusChangeByPurchase(zeroOrdersMoney);
+        OrdersMoney totalPurchaseOrdersMoney = addOrdersLineAndReturnPurchaseTotalMoney(orders, requestDto.getProductPurchaseList());
+        orders.statusChangeByPurchase(totalPurchaseOrdersMoney);
         ordersRepository.save(orders);
         return orders.getIdx();
+    }
+
+    /**
+     * @param orders                        주문자
+     * @param productPurchaseListRequestDTO 주문하고자하는 상품의 번호와 갯수
+     * @return 총 구매 금액
+     * @description 클라이언트가 구입하고자 하는 상품을 주문 목록에 등록하고, 상품의 총 금액을 반환하는 메서드입니다.
+     */
+    private OrdersMoney addOrdersLineAndReturnPurchaseTotalMoney(Orders orders, List<ProductPurchaseListRequestDto> productPurchaseListRequestDTO) {
+        OrdersMoney result = OrdersMoney.ZERO;
+        for (ProductPurchaseListRequestDto productPurchaseDTO : productPurchaseListRequestDTO) {
+            Product product = productDao.findByIdx(productPurchaseDTO.getProductIdx());
+            PurchaseMoney purchaseMoney = orders.addOrdersLineAndReturnPurchaseTotalMoney(product, productPurchaseDTO.getProductBuyQuantity());
+            result = result.plus(purchaseMoney.getPurchaseMoney());
+        }
+        return result;
     }
 
     /**
@@ -73,21 +83,22 @@ public class OrdersService {
         Map<Long, Integer> hasCouponIdxAndUsedCouponStockMap = usedCouponAndUsedStockToMap(couponUsedRequestDTO);
         List<MemberHasCoupon> memberHasCoupons = memberHasCouponDao.findByMemberIdx(memberIdx, hasCouponIdxAndUsedCouponStockMap.keySet());
 
-        OrdersMoney ordersDiscountMoney = OrdersMoney.ZERO;
+        OrdersMoney result = OrdersMoney.ZERO;
         for (MemberHasCoupon memberHasCoupon : memberHasCoupons) {
             if (hasCouponIdxAndUsedCouponStockMap.containsKey(memberHasCoupon.getIdx())) {
                 memberHasCoupon.usedCoupon(hasCouponIdxAndUsedCouponStockMap.get(memberHasCoupon.getIdx()));
-                ordersDiscountMoney = ordersDiscountMoney.plus(memberHasCoupon.getCouponSalePrice());
+                result = result.plus(memberHasCoupon.getCouponSalePrice());
             }
         }
-        return ordersDiscountMoney;
+        return result;
     }
 
     private Map<Long, Integer> usedCouponAndUsedStockToMap(List<CouponUsedRequestDto> couponUsedRequest) {
         return couponUsedRequest.stream()
                 .collect(toMap(
                         CouponUsedRequestDto::getHasCouponIdx,
-                        CouponUsedRequestDto::getUsedStock
+                        CouponUsedRequestDto::getUsedStock,
+                        (oldVal, newVal) -> newVal
                 ));
     }
 }
