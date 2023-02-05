@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class PurchaseMoneyTest {
+class PurchaseOrdersMoneyTest {
 
     @Test
     void 정상적인_Money_클래스_생성_1() {

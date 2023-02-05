@@ -35,4 +35,6 @@ public class OrdersPurchaseRequestDto {
     @Valid
     @NotEmpty
     private List<ProductPurchaseListRequestDto> productPurchaseList;
+
+    private List<CouponUsedRequestDto> couponUsedList;
 }

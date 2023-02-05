@@ -1,6 +1,7 @@
 package com.invitationcode.generator.domain.member.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
@@ -27,4 +28,11 @@ public class MemberUsedCouponHistory {
     @OneToOne
     @JoinColumn(name = "member_has_coupon_idx", foreignKey = @ForeignKey(name = "fk_member_used_coupon_history_member_has_coupon"))
     private MemberHasCoupon memberHasCoupon;
+
+    @Builder
+    public MemberUsedCouponHistory(Integer couponUsedStock, MemberHasCoupon memberHasCoupon) {
+        this.couponUsedStock = couponUsedStock;
+        this.memberHasCoupon = memberHasCoupon;
+        this.couponUsedDate = LocalDateTime.now();
+    }
 }

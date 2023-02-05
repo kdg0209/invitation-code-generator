@@ -1,8 +1,11 @@
 package com.invitationcode.generator.domain.member.domain;
 
 import com.invitationcode.generator.domain.coupon.domain.Coupon;
+import com.invitationcode.generator.global.exception.BusinessException;
+import com.invitationcode.generator.global.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
@@ -10,6 +13,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "member_has_coupon")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,7 +51,7 @@ public class MemberHasCoupon {
     @JoinColumn(name = "coupon_idx", nullable = false, foreignKey = @ForeignKey(name = "fk_member_has_coupon_coupon"))
     private Coupon coupon;
 
-    @OneToOne(mappedBy = "memberHasCoupon")
+    @OneToOne(mappedBy = "memberHasCoupon", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberUsedCouponHistory memberUsedCouponHistory;
 
     @Builder
@@ -59,5 +63,32 @@ public class MemberHasCoupon {
         this.couponStock = couponStock;
         this.couponExpirationDateTime = couponExpirationDateTime;
         this.createdDate = LocalDateTime.now();
+    }
+
+    public void usedCoupon(Integer usedCouponStock) {
+        verifyCouponDateExpiration();
+        decreaseCouponStock(usedCouponStock);
+        createMemberUsedCouponHistory(usedCouponStock);
+    }
+
+    private void verifyCouponDateExpiration() {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(this.couponExpirationDateTime)) {
+            throw new BusinessException(ErrorCode.COUPON_ALREADY_EXPIRATION_DATETIME_EXCEPTION);
+        }
+    }
+
+    private void decreaseCouponStock(Integer usedCouponStock) {
+        if (usedCouponStock == null || usedCouponStock < 0 || this.couponStock < usedCouponStock) {
+            throw new BusinessException(ErrorCode.BIG_REQUEST_STOCK_THAN_COUPON_STOCK_EXCEPTION);
+        }
+        this.couponStock -= usedCouponStock;
+    }
+
+    private void createMemberUsedCouponHistory(Integer usedCouponStock) {
+        this.memberUsedCouponHistory = MemberUsedCouponHistory.builder()
+                .couponUsedStock(usedCouponStock)
+                .memberHasCoupon(this)
+                .build();
     }
 }

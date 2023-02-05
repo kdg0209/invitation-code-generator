@@ -25,7 +25,7 @@ public class Orders {
     private Long idx;
 
     @Embedded
-    private Money money;
+    private OrdersMoney ordersMoney;
 
     @Embedded
     private ShippingInfo shippingInfo;
@@ -42,14 +42,14 @@ public class Orders {
     private List<OrdersLine> ordersLines = new ArrayList<>();
 
     @Builder
-    public Orders(Member member, Integer depositPrice, ShippingInfo shippingInfo) {
+    public Orders(Member member, OrdersMoney depositOrdersMoney, OrdersMoney ordersDiscountMoney, ShippingInfo shippingInfo) {
         this.member = member;
-        this.money = new Money(depositPrice);
+        this.ordersMoney = depositOrdersMoney.minus(ordersDiscountMoney);
         this.shippingInfo = shippingInfo;
     }
 
     public Long getIdx() {
-        return idx;
+        return this.idx;
     }
 
     /**
@@ -70,14 +70,14 @@ public class Orders {
         return ordersLine.purchaseTotalMoney();
     }
 
-    public void statusChangeByPurchase(Money totalPurchaseMoney) {
-        if (this.money.isThanEqual(totalPurchaseMoney)) {
+    public void statusChangeByPurchase(OrdersMoney totalPurchaseOrdersMoney) {
+        if (this.ordersMoney.isThanEqual(totalPurchaseOrdersMoney)) {
             this.status = OrderStatus.PAY_COMPLETED;
         }
-        if (this.money.isLessThan(totalPurchaseMoney)) {
+        if (this.ordersMoney.isLessThan(totalPurchaseOrdersMoney)) {
             this.status = OrderStatus.PAY_WAITING;
         }
-        if (this.money.isThanGreater(totalPurchaseMoney)) {
+        if (this.ordersMoney.isThanGreater(totalPurchaseOrdersMoney)) {
             throw new BusinessException(ErrorCode.TOTAL_PRICE_THAN_PRODUCT_MONEY_EXCEPTION);
         }
     }

@@ -49,7 +49,7 @@ class OrdersTest {
         // when
         Orders orders = Orders.builder()
                 .member(member)
-                .depositPrice(10000)
+                .ordersDiscountMoney(new OrdersMoney(10000))
                 .shippingInfo(shippingInfo)
                 .build();
 
@@ -81,7 +81,7 @@ class OrdersTest {
             // when
             Orders orders = Orders.builder()
                     .member(member)
-                    .depositPrice(1000000000)
+                    .ordersDiscountMoney(new OrdersMoney(1000000000))
                     .shippingInfo(shippingInfo)
                     .build();
 
