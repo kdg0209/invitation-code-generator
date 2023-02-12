@@ -41,4 +41,9 @@ public class ProductService {
         Product product = productDao.findByIdx(productIdx);
         product.delete();
     }
+
+    public void decreaseStock(int stock) {
+        Product product = productDao.findByIdx(1L);
+        product.decreaseStock(stock);
+    }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.util.Optional;
 
 import static com.invitationcode.generator.domain.product.domain.QProduct.product;
@@ -23,9 +24,9 @@ public class ProductDao {
         Product result = queryFactory
                 .selectFrom(product)
                 .where(
-                        product.idx.eq(productIdx),
-                        product.isDeleted.isFalse()
+                        product.idx.eq(productIdx)
                 )
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchOne();
 
         return Optional.ofNullable(result)
