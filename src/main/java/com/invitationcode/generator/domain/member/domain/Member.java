@@ -93,4 +93,8 @@ public class Member {
                 .build();
         this.memberHasCoupons.add(memberHasCoupon);
     }
+
+    public String passwordToString() {
+        return this.password.getPassword();
+    }
 }
