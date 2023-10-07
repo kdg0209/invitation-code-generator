@@ -4,31 +4,29 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class EmailTest {
 
-    private static final String REGEX = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-
     @Test
-    @DisplayName("비정상적인 이메일 생성 1")
-    void 비정상적인_이메일_생성_1() {
+    void 도메인의_주소가_올바르지_않은_경우_예외를_발생시긴다() {
 
         // given
-        String inputEmail = "test@naver";
+        String input = "test@naver";
 
-        // then
-        assertThat(inputEmail.matches(REGEX)).isFalse();
+        // when && then
+        assertThatThrownBy(() -> new Email(input))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    @DisplayName("비정상적인 이메일 생성 2")
-    void 비정상적인_이메일_생성_2() {
+    void 도메인의_주소에서_골뱅이가_없는_경우_올바르지_않은_경우_예외를_발생시긴다() {
 
         // given
-        String inputEmail = "testnaver.com";
+        String input = "testnaver.com";
 
-        // then
-        assertThat(inputEmail.matches(REGEX)).isFalse();
+        assertThatThrownBy(() -> new Email(input))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -36,10 +34,13 @@ class EmailTest {
     void 정상적인_이메일_생성() {
 
         // given
-        String inputEmail = "test@naver.co.kr";
+        String input = "test@naver.co.kr";
+
+        // when
+        Email email = new Email(input);
 
         // then
-        assertThat(inputEmail.matches(REGEX)).isTrue();
+        assertThat(email.getEmail()).isEqualTo("test@naver.co.kr");
     }
 
 }
