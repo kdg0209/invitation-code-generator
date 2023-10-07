@@ -1,67 +1,88 @@
 package com.invitationcode.generator.domain.member.domain;
 
-import com.invitationcode.generator.domain.member.dao.MemberDao;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-@SpringBootTest
 class PasswordTest {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private MemberDao memberDao;
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Test
-    void 비밀번호_생성() {
+    void 정상적인_비밀번호_객체를_생성할_수_있다() {
 
         // given
-        Password password = new Password("12345", passwordEncoder);
+        String password = "12345";
 
         // when
-        String encodedPassword = passwordEncoder.encode(password.getPassword());
+        Password result = new Password(password, PASSWORD_ENCODER);
 
         // then
-        assertThat(passwordEncoder.matches(password.getPassword(), encodedPassword)).isTrue();
+        assertThat(result).isNotNull();
     }
 
     @Test
-    void 잘못된_비밀번호_입력으로_인한_변경_실패() {
+    void NULL을_사용하여_비밀번호_객체를_생성하는_경우_예외를_발생시킨다() {
 
         // given
-        Long memberIdx = 12L;
-        String oldPassword = "123456";
-        String newPassword = "123456789";
+        String password = null;
 
-        // when
-        Member member = memberDao.findByIdx(memberIdx);
-
-
-        // then
-        assertThatThrownBy(() -> {
-            member.changeablePassword(oldPassword, newPassword, passwordEncoder);
-        }).isInstanceOf(IllegalArgumentException.class);
+        // when && then
+        assertThatThrownBy(() -> new Password(password, PASSWORD_ENCODER))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void 비밀번호_변경_성공() {
+    void 빈문자열을_사용하여_비밀번호_객체를_생성하는_경우_예외를_발생시킨다() {
 
         // given
-        Long memberIdx = 12L;
-        String oldPassword = "12345";
-        String newPassword = "123456789";
+        String password = "";
+
+        // when && then
+        assertThatThrownBy(() -> new Password(password, PASSWORD_ENCODER))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 공백이_포함된_문자열을_사용하여_비밀번호_객체를_생성하는_경우_예외를_발생시킨다() {
+
+        // given
+        String password = " ";
+
+        // when && then
+        assertThatThrownBy(() -> new Password(password, PASSWORD_ENCODER))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 새로운_문자열을_통해_비밀번호를_변경할_수_있다() {
+
+        // given
+        String oldPwd = "12345";
+        Password password = new Password(oldPwd, PASSWORD_ENCODER);
 
         // when
-        Member member = memberDao.findByIdx(memberIdx);
-        member.changeablePassword(oldPassword, newPassword, passwordEncoder);
+        String newPwd = "1234567890";
+        password.changePassword(oldPwd, newPwd, PASSWORD_ENCODER);
 
         // then
-        assertThat(member.getIdx()).isEqualTo(12L);
+        assertThat(PASSWORD_ENCODER.matches(newPwd, password.getPassword())).isTrue();
+    }
+
+    @Test
+    void 기존_비밀번호가_일치하지_않는_문자열로_비밀번호를_수정하는_경우_예외가_발생한다() {
+
+        // given
+        String oldPwd = "12345";
+        Password password = new Password(oldPwd, PASSWORD_ENCODER);
+
+        // when && then
+        String wrongOldPwd = "0000";
+        String newPwd = "1234567890";
+        assertThatThrownBy(() -> password.changePassword(wrongOldPwd, newPwd, PASSWORD_ENCODER))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
