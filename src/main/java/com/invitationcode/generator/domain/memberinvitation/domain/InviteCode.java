@@ -1,11 +1,13 @@
 package com.invitationcode.generator.domain.memberinvitation.domain;
 
+import lombok.Getter;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Getter
 @Embeddable
 public class InviteCode {
 

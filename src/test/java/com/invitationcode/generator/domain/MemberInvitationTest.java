@@ -1,170 +1,160 @@
 package com.invitationcode.generator.domain;
 
+import com.invitationcode.generator.domain.member.domain.Email;
 import com.invitationcode.generator.domain.member.domain.Member;
 import com.invitationcode.generator.domain.member.domain.Password;
-import com.invitationcode.generator.domain.member.repository.MemberRepository;
 import com.invitationcode.generator.domain.memberinvitation.domain.InviteCode;
+import com.invitationcode.generator.domain.memberinvitation.domain.InviteStatus;
 import com.invitationcode.generator.domain.memberinvitation.domain.MemberInvitation;
 import com.invitationcode.generator.domain.memberinvitation.domain.ReceiverEmail;
-import com.invitationcode.generator.domain.memberinvitation.repository.MemberInvitationRepository;
+import com.invitationcode.generator.global.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-@SpringBootTest
 class MemberInvitationTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private MemberInvitationRepository memberInvitationRepository;
-
     private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
-
-    private static final Executor executor = Executors.newFixedThreadPool(150);
-
     private Member member;
 
     @BeforeEach
-    void memberInit() {
+    void setUp() {
+        String id = "test";
         Password password = new Password("12345", PASSWORD_ENCODER);
-        member = Member.builder()
-                .name("홍길동")
-                .password(password)
-                .build();
+        String name = "홍길동";
+        Email email = new Email("test@naver.com");
+        String nickName = "홍길동";
 
-        memberRepository.save(member);
+        member = Member.builder()
+                .id(id)
+                .password(password)
+                .name(name)
+                .email(email)
+                .nickName(nickName)
+                .build();
     }
 
     @Test
-    void 멤버코드_생성() {
+    void 정상적안_값을_사용하여_멤버_초대_객체를_생성할_수_있다() {
 
         // given
+        ReceiverEmail receiverEmail = new ReceiverEmail("test@naver.com");
         InviteCode inviteCode = new InviteCode();
-        MemberInvitation memberInvitation = MemberInvitation.builder()
-                .receiverEmail(new ReceiverEmail("test1@naver.com"))
-                .inviteCode(inviteCode)
-                .member(member)
-                .build();
+        Member newMember = this.member;
 
         // when
-        memberInvitationRepository.save(memberInvitation);
+        MemberInvitation result = MemberInvitation.builder()
+                .receiverEmail(receiverEmail)
+                .inviteCode(inviteCode)
+                .member(newMember)
+                .build();
 
         // then
-        assertThat(memberInvitation.getIdx()).isEqualTo(3L);
+        assertThat(result).isNotNull();
     }
 
     @Test
-    @DisplayName("동시에 100명 초대시 중복된 초대 코드 발생")
-    void 동시에_100명_초대() throws InterruptedException {
-        List<CompletableFuture<MemberInvitation>> completableFutures = new ArrayList<>();
+    void 멤버_초대_객체의_초대_상태를_완료_상태로_수정할_수_있다() {
 
-        int threadCount = 100;
-        CountDownLatch latch = new CountDownLatch(threadCount);
+        // given
+        ReceiverEmail receiverEmail = new ReceiverEmail("test@naver.com");
+        InviteCode inviteCode = new InviteCode();
+        Member newMember = this.member;
 
-        for (int i = 0; i < threadCount; i++) {
-            CompletableFuture<MemberInvitation> future = CompletableFuture.supplyAsync(() -> {
-                try {
-                    InviteCode inviteCode = new InviteCode();
-                    MemberInvitation memberInvitation = MemberInvitation.builder()
-                            .receiverEmail(new ReceiverEmail("test1@naver.com"))
-                            .inviteCode(inviteCode)
-                            .member(member)
-                            .build();
-                    return memberInvitationRepository.save(memberInvitation);
-                } finally {
-                    latch.countDown();
-                }
-            }, executor);
-            completableFutures.add(future);
-        }
-        latch.await();
+        // when
+        MemberInvitation result = MemberInvitation.builder()
+                .receiverEmail(receiverEmail)
+                .inviteCode(inviteCode)
+                .member(newMember)
+                .build();
 
-        List<MemberInvitation> createdMemberInvitations = completableFutures.stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
+        result.inviteCompleted();
 
-        assertThat(createdMemberInvitations.size()).isEqualTo(100);
+        // then
+        assertThat(result.getInviteStatus()).isEqualTo(InviteStatus.COMPLETED);
     }
 
     @Test
-    @DisplayName("동시에 1000명 초대시 중복된 초대 코드 발생")
-    void 동시에_1000명_초대() throws InterruptedException {
-        List<CompletableFuture<MemberInvitation>> completableFutures = new ArrayList<>();
+    void 멤버_초대_객체의_초대_상태를_거부_상태로_수정할_수_있다() {
 
-        int threadCount = 1000;
-        CountDownLatch latch = new CountDownLatch(threadCount);
+        // given
+        ReceiverEmail receiverEmail = new ReceiverEmail("test@naver.com");
+        InviteCode inviteCode = new InviteCode();
+        Member newMember = this.member;
 
-        for (int i = 0; i < threadCount; i++) {
-            CompletableFuture<MemberInvitation> future = CompletableFuture.supplyAsync(() -> {
-                try {
-                    InviteCode inviteCode = new InviteCode();
-                    MemberInvitation memberInvitation = MemberInvitation.builder()
-                            .receiverEmail(new ReceiverEmail("test1@naver.com"))
-                            .inviteCode(inviteCode)
-                            .member(member)
-                            .build();
-                    return memberInvitationRepository.save(memberInvitation);
-                } finally {
-                    latch.countDown();
-                }
-            }, executor);
-            completableFutures.add(future);
-        }
-        latch.await();
+        // when
+        MemberInvitation result = MemberInvitation.builder()
+                .receiverEmail(receiverEmail)
+                .inviteCode(inviteCode)
+                .member(newMember)
+                .build();
 
-        List<MemberInvitation> createdMemberInvitations = completableFutures.stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
+        result.inviteRejected();
 
-        assertThat(createdMemberInvitations.size()).isEqualTo(1000);
+        // then
+        assertThat(result.getInviteStatus()).isEqualTo(InviteStatus.REJECTED);
     }
 
     @Test
-    @DisplayName("동시에 10000명 초대시 중복된 초대 코드 발생")
-    void 동시에_10000명_초대() throws InterruptedException {
-        List<CompletableFuture<MemberInvitation>> completableFutures = new ArrayList<>();
+    void 멤버_초대_객체의_상태가_이미_완료_상태라면_예외를_발생시킨다() {
 
-        int threadCount = 10000;
-        CountDownLatch latch = new CountDownLatch(threadCount);
+        // given
+        ReceiverEmail receiverEmail = new ReceiverEmail("test@naver.com");
+        InviteCode inviteCode = new InviteCode();
+        Member newMember = this.member;
 
-        for (int i = 0; i < threadCount; i++) {
-            CompletableFuture<MemberInvitation> future = CompletableFuture.supplyAsync(() -> {
-                try {
-                    InviteCode inviteCode = new InviteCode();
-                    MemberInvitation memberInvitation = MemberInvitation.builder()
-                            .receiverEmail(new ReceiverEmail("test1@naver.com"))
-                            .inviteCode(inviteCode)
-                            .member(member)
-                            .build();
-                    return memberInvitationRepository.save(memberInvitation);
-                } finally {
-                    latch.countDown();
-                }
-            }, executor);
-            completableFutures.add(future);
-        }
-        latch.await();
+        // when
+        MemberInvitation result = MemberInvitation.builder()
+                .receiverEmail(receiverEmail)
+                .inviteCode(inviteCode)
+                .member(newMember)
+                .build();
 
-        List<MemberInvitation> createdMemberInvitations = completableFutures.stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
+        result.inviteCompleted();
+        assertThatThrownBy(result::verifyAlreadyCompletedOrAlreadyRejected)
+                .isInstanceOf(BusinessException.class);
+    }
 
-        assertThat(createdMemberInvitations.size()).isEqualTo(10000);
+    @Test
+    void 멤버_초대_객체의_상태가_이미_거부_상태라면_예외를_발생시킨다() {
+
+        // given
+        ReceiverEmail receiverEmail = new ReceiverEmail("test@naver.com");
+        InviteCode inviteCode = new InviteCode();
+        Member newMember = this.member;
+
+        // when
+        MemberInvitation result = MemberInvitation.builder()
+                .receiverEmail(receiverEmail)
+                .inviteCode(inviteCode)
+                .member(newMember)
+                .build();
+
+        result.inviteRejected();
+        assertThatThrownBy(result::verifyAlreadyCompletedOrAlreadyRejected)
+                .isInstanceOf(BusinessException.class);
+    }
+
+    @Test
+    void 멤버_초대_객체의_취소여부의_상태를_변경시킬_수_있다() {
+
+        // given
+        ReceiverEmail receiverEmail = new ReceiverEmail("test@naver.com");
+        InviteCode inviteCode = new InviteCode();
+        Member newMember = this.member;
+
+        // when
+        MemberInvitation result = MemberInvitation.builder()
+                .receiverEmail(receiverEmail)
+                .inviteCode(inviteCode)
+                .member(newMember)
+                .build();
+
+        // then
+        result.cancelByMember();
+        assertThat(result.getIsCancel()).isTrue();
     }
 }
