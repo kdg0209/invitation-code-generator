@@ -1,4 +1,4 @@
-package com.invitationcode.generator.domain.coupon.domain;
+package com.invitationcode.generator.domain.product.domain;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,10 +24,10 @@ class MoneyTest {
     void 비정상적인_Integer_의_범위를_사용하여_Money_객체를_만들경우_예외가_발생한다() {
 
         // given
-        Integer integer = Integer.MAX_VALUE + 1;
+        Integer price = Integer.MAX_VALUE + 1;
 
         // when && then
-        assertThatThrownBy(() -> new Money(integer))
+        assertThatThrownBy(() -> new Money(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -46,10 +46,10 @@ class MoneyTest {
     void NULL인_Integer를_사용하여_Money_객체를_만들경우_예외가_발생한다() {
 
         // given
-        Integer integer = null;
+        Integer price = null;
 
         // when && then
-        assertThatThrownBy(() -> new Money(integer))
+        assertThatThrownBy(() -> new Money(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

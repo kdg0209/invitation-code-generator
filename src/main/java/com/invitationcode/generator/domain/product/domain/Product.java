@@ -4,6 +4,7 @@ import com.invitationcode.generator.global.exception.BusinessException;
 import com.invitationcode.generator.global.exception.ErrorCode;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -34,9 +35,9 @@ public class Product {
     private Boolean isDeleted;
 
     @Builder
-    public Product(String name, int stock, Integer money) {
+    public Product(String name, int stock, Money money) {
         this.name = name;
-        this.money = new Money(money);
+        this.money = money;
         setStock(stock);
     }
 
@@ -44,11 +45,14 @@ public class Product {
         return money.getPrice();
     }
 
-    public void updateName(@NonNull String name) {
+    public void updateName(String name) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException();
+        }
         this.name = name;
     }
 
-    public void updateStock(@NonNull Integer stock) {
+    public void updateStock(int stock) {
         setStock(stock);
     }
 
@@ -59,16 +63,16 @@ public class Product {
         this.stock -= productBuyQuantity;
     }
 
-    public void updateMoney(Integer price) {
-        this.money = new Money(price);
+    public void updateMoney(Money money) {
+        this.money = money;
     }
 
     public void delete() {
         this.isDeleted = true;
     }
 
-    private void setStock(Integer stock) {
-        if (stock == null || stock < 0) {
+    private void setStock(int stock) {
+        if (stock < 0) {
             throw new IllegalArgumentException();
         }
         this.stock = stock;

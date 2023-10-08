@@ -1,6 +1,7 @@
 package com.invitationcode.generator.domain.product.service;
 
 import com.invitationcode.generator.domain.product.dao.ProductDao;
+import com.invitationcode.generator.domain.product.domain.Money;
 import com.invitationcode.generator.domain.product.domain.Product;
 import com.invitationcode.generator.domain.product.dto.ProductCreateRequestDto;
 import com.invitationcode.generator.domain.product.dto.ProductUpdateRequestDto;
@@ -17,11 +18,11 @@ public class ProductService {
     private final ProductDao productDao;
     private final ProductRepository productRepository;
 
-    public Long create(ProductCreateRequestDto requestDto) {
+    public Long create(ProductCreateRequestDto request) {
         Product product = Product.builder()
-                .name(requestDto.getName())
-                .stock(requestDto.getStock())
-                .money(requestDto.getPrice())
+                .name(request.getName())
+                .stock(request.getStock())
+                .money(new Money(request.getPrice()))
                 .build();
 
         productRepository.save(product);
@@ -32,7 +33,7 @@ public class ProductService {
         Product product = productDao.findByIdx(productIdx);
         product.updateName(requestDto.getName());
         product.updateStock(requestDto.getStock());
-        product.updateMoney(requestDto.getPrice());
+        product.updateMoney(new Money(requestDto.getPrice()));
 
         return product.getIdx();
     }
