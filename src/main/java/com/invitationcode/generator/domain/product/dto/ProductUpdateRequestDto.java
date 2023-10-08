@@ -15,7 +15,6 @@ public class ProductUpdateRequestDto {
     @Positive
     private Integer price;
 
-    @NotNull
     @Positive
-    private Integer stock;
+    private int stock;
 }
