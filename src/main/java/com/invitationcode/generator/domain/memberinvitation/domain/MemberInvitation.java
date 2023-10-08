@@ -5,12 +5,14 @@ import com.invitationcode.generator.global.exception.BusinessException;
 import com.invitationcode.generator.global.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "member_invitation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
