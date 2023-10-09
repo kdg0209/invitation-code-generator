@@ -18,12 +18,12 @@ public class Money {
     @Column(name = "sale_price", nullable = false)
     private BigDecimal salePrice;
 
-    public Money(Integer salePrice) {
+    public Money(long salePrice) {
         setSalePrice(salePrice);
     }
 
-    private void setSalePrice(Integer salePrice) {
-        if (salePrice == null || salePrice < 0) {
+    private void setSalePrice(long salePrice) {
+        if (salePrice < 0) {
             throw new IllegalArgumentException();
         }
         this.salePrice = new BigDecimal(salePrice);

@@ -4,6 +4,7 @@ import com.invitationcode.generator.global.exception.BusinessException;
 import com.invitationcode.generator.global.exception.ErrorCode;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -28,17 +29,17 @@ public class Coupon {
 
     @Comment(value = "재고")
     @Column(name = "stock", nullable = false)
-    private Integer stock;
+    private int stock;
 
     @Comment(value = "만료일자")
     @Column(name = "expiration_datetime", nullable = false)
     private LocalDateTime expirationDateTime;
 
     @Builder
-    public Coupon(Money money, @NonNull String name, Integer stock, @NonNull LocalDateTime expirationDateTime) {
+    public Coupon(Money money, String name, int stock, LocalDateTime expirationDateTime) {
         this.money = money;
-        this.name = name;
-        this.expirationDateTime = expirationDateTime;
+        setName(name);
+        setExpirationDateTime(expirationDateTime);
         setStock(stock);
     }
 
@@ -47,10 +48,10 @@ public class Coupon {
     }
 
     public void updateName(String name) {
-        this.name = name;
+        setName(name);
     }
 
-    public void updateStock(Integer stock) {
+    public void updateStock(int stock) {
         setStock(stock);
     }
 
@@ -59,15 +60,11 @@ public class Coupon {
     }
 
     public void updateExpirationDateTime(LocalDateTime expirationDateTime) {
-        LocalDateTime now = LocalDateTime.now();
-        if (expirationDateTime.isBefore(now)) {
-            throw new BusinessException(ErrorCode.COUPON_EXPIRATION_DATETIME_EXCEPTION);
-        }
-        this.expirationDateTime = expirationDateTime;
+        setExpirationDateTime(expirationDateTime);
     }
 
-    public void decreaseStock(Integer stock) {
-        if (stock == null || stock < 0 || this.stock < stock) {
+    public void decreaseStock(int stock) {
+        if (stock < 0 || this.stock < stock) {
             throw new BusinessException(ErrorCode.BIG_REQUEST_STOCK_THAN_COUPON_STOCK_EXCEPTION);
         }
         this.stock -= stock;
@@ -80,8 +77,23 @@ public class Coupon {
         }
     }
 
-    private void setStock(Integer stock) {
-        if (stock == null || stock < 0) {
+    private void setName(String name) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException();
+        }
+        this.name = name;
+    }
+
+    private void setExpirationDateTime(LocalDateTime expirationDateTime) {
+        LocalDateTime now = LocalDateTime.now();
+        if (expirationDateTime == null || expirationDateTime.isBefore(now)) {
+            throw new BusinessException(ErrorCode.COUPON_EXPIRATION_DATETIME_EXCEPTION);
+        }
+        this.expirationDateTime = expirationDateTime;
+    }
+
+    private void setStock(int stock) {
+        if (stock < 0) {
             throw new IllegalArgumentException();
         }
         this.stock = stock;
