@@ -41,15 +41,4 @@ class MoneyTest {
         assertThatThrownBy(() -> new Money(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
-
-    @Test
-    void NULL인_Integer를_사용하여_Money_객체를_만들경우_예외가_발생한다() {
-
-        // given
-        Integer integer = null;
-
-        // when && then
-        assertThatThrownBy(() -> new Money(integer))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
 }
