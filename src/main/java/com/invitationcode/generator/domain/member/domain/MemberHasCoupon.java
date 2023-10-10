@@ -33,7 +33,7 @@ public class MemberHasCoupon {
 
     @Comment(value = "쿠폰 재고")
     @Column(name = "coupon_stock", nullable = false)
-    private Integer couponStock;
+    private int couponStock;
 
     @Comment(value = "쿠폰 만료일자")
     @Column(name = "coupon_expiration_datetime", nullable = false)
@@ -55,7 +55,7 @@ public class MemberHasCoupon {
     private MemberUsedCouponHistory memberUsedCouponHistory;
 
     @Builder
-    public MemberHasCoupon(Member member, Coupon coupon, String couponName, BigDecimal couponSalePrice, Integer couponStock, LocalDateTime couponExpirationDateTime) {
+    public MemberHasCoupon(Member member, Coupon coupon, String couponName, BigDecimal couponSalePrice, int couponStock, LocalDateTime couponExpirationDateTime) {
         this.member = member;
         this.coupon = coupon;
         this.couponName = couponName;

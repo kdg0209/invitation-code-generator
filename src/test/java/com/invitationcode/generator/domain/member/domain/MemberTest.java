@@ -1,9 +1,13 @@
 package com.invitationcode.generator.domain.member.domain;
 
+import com.invitationcode.generator.domain.coupon.domain.Coupon;
+import com.invitationcode.generator.domain.coupon.domain.Money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -76,5 +80,29 @@ class MemberTest {
 
         // then
         assertThat(member.getIsDeleted()).isTrue();
+    }
+
+    @Test
+    void 멤버에게_쿠폰을_발급할_수_있다() {
+
+        // given
+        Money money = new Money(1000);
+        String name = "쿠폰 1";
+        int stock = 100;
+        LocalDateTime expirationDateTime = LocalDateTime.of(2025, 12, 31, 11, 59, 0);
+        Coupon coupon = Coupon.builder()
+                .money(money)
+                .name(name)
+                .stock(stock)
+                .expirationDateTime(expirationDateTime)
+                .build();
+        int memberCouponStock = 10;
+
+        // when
+        member.addCoupon(coupon, memberCouponStock);
+
+        // then
+        assertThat(member.getMemberHasCoupons().size()).isEqualTo(1);
+        assertThat(member.getMemberHasCoupons().get(0).getCouponStock()).isEqualTo(10);
     }
 }

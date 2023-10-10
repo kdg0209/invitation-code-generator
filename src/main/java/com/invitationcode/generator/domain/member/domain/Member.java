@@ -82,7 +82,7 @@ public class Member {
         return this.email.getEmail();
     }
 
-    public void addCoupon(Coupon coupon, Integer stock) {
+    public void addCoupon(Coupon coupon, int stock) {
         MemberHasCoupon memberHasCoupon = MemberHasCoupon.builder()
                 .member(this)
                 .coupon(coupon)
