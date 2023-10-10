@@ -28,9 +28,8 @@ public class OrdersPurchaseRequestDto {
     @NotNull
     private String message;
 
-    @NotNull
     @Positive
-    private Integer depositPrice;
+    private long depositPrice;
 
     @Valid
     @NotEmpty

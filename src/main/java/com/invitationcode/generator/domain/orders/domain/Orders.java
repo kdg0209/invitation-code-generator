@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class Orders {
     @Builder
     public Orders(Member member, OrdersMoney depositOrdersMoney, OrdersMoney ordersDiscountMoney, ShippingInfo shippingInfo) {
         this.member = member;
-        this.ordersMoney = depositOrdersMoney.minus(ordersDiscountMoney);
+        this.ordersMoney = depositOrdersMoney.minus(ordersDiscountMoney.getTotalPrice());
         this.shippingInfo = shippingInfo;
     }
 
@@ -71,13 +72,14 @@ public class Orders {
     }
 
     public void statusChangeByPurchase(OrdersMoney totalPurchaseOrdersMoney) {
-        if (this.ordersMoney.isThanEqual(totalPurchaseOrdersMoney)) {
+        BigDecimal totalPrice = totalPurchaseOrdersMoney.getTotalPrice();
+        if (this.ordersMoney.isThanEqual(totalPrice)) {
             this.status = OrderStatus.PAY_COMPLETED;
         }
-        if (this.ordersMoney.isLessThan(totalPurchaseOrdersMoney)) {
+        if (this.ordersMoney.isLessThan(totalPrice)) {
             this.status = OrderStatus.PAY_WAITING;
         }
-        if (this.ordersMoney.isThanGreater(totalPurchaseOrdersMoney)) {
+        if (this.ordersMoney.isThanGreater(totalPrice)) {
             throw new BusinessException(ErrorCode.TOTAL_PRICE_THAN_PRODUCT_MONEY_EXCEPTION);
         }
     }

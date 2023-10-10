@@ -21,8 +21,8 @@
 
 ### 주문 클래스
 - [ ] Orders 클래스 테스트 코드 추가
-- [ ] Orders OrdersMoney 클래스 테스트 코드 추가
-- [ ] Orders ShippingInfo 클래스 테스트 코드 추가
+- [v] Orders OrdersMoney 클래스 테스트 코드 추가
+- [v] Orders ShippingInfo 클래스 테스트 코드 추가
 
 ### 주문 목록 클래스
 - [ ] OrdersLine 클래스 테스트 코드 추가
