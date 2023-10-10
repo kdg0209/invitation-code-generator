@@ -6,6 +6,7 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '2.7.8'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
@@ -31,6 +32,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core:3.24.1'
 
@@ -44,6 +47,76 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+jacocoTestReport {
+
+    reports {
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+    }
+
+    // 디렉터리/파일명
+    def qTypes = []
+    for(qPattern in "**/entity/QA" .. "**/entity/QZ"){
+        qTypes.add(qPattern + "*")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ["**/*Application"] + qTypes)
+        }))
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+
+    // 패키지.클래스명
+    def qTypes = []
+    for (qPattern in '*.entity.QA'..'*.entity.QZ') {
+        qTypes.add(qPattern + '*')
+    }
+
+    violationRules {
+        rule {
+            enabled = true // 활성화
+            element = 'CLASS' // 클래스 단위로 커버리지 체크
+            // includes = []
+
+            // 라인 커버리지 제한을 80%로 설정
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.8
+            }
+
+            // 브랜치 커버리지 제한을 80%로 설정
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.8
+            }
+
+            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 200
+            }
+
+            excludes = ["*.*Application"] + qTypes
+        }
+
+    }
 }
 
 //querydsl 추가 시작
