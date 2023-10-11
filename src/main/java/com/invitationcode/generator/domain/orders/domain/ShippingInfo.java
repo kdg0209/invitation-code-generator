@@ -17,7 +17,7 @@ public class ShippingInfo {
 
     @Comment(value = "우편 번호")
     @Column(name = "zipcode", nullable = false)
-    private Integer zipcode;
+    private int zipcode;
 
     @Comment(value = "주소")
     @Column(name = "address", nullable = false)
@@ -32,7 +32,7 @@ public class ShippingInfo {
     private String message;
 
     @Builder
-    public ShippingInfo(Integer zipcode, String address, String addressDetail, String message) {
+    public ShippingInfo(int zipcode, String address, String addressDetail, String message) {
         this.zipcode = zipcode;
         this.address = address;
         this.addressDetail = addressDetail;

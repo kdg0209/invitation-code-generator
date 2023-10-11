@@ -18,12 +18,12 @@ public class Money {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    public Money(Integer price) {
+    public Money(long price) {
         setPrice(price);
     }
 
-    private void setPrice(Integer price) {
-        if (price == null || price < 0) {
+    private void setPrice(long price) {
+        if (price < 0) {
             throw new IllegalArgumentException();
         }
         this.price = new BigDecimal(price);

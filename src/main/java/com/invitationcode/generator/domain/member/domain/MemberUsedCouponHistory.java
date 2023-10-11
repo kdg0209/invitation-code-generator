@@ -19,7 +19,7 @@ public class MemberUsedCouponHistory {
 
     @Comment(value = "사용한 재고")
     @Column(name = "coupon_used_stock", nullable = false)
-    private Integer couponUsedStock;
+    private int couponUsedStock;
 
     @Comment(value = "사용일자")
     @Column(name = "coupon_used_date")
@@ -30,7 +30,7 @@ public class MemberUsedCouponHistory {
     private MemberHasCoupon memberHasCoupon;
 
     @Builder
-    public MemberUsedCouponHistory(Integer couponUsedStock, MemberHasCoupon memberHasCoupon) {
+    public MemberUsedCouponHistory(int couponUsedStock, MemberHasCoupon memberHasCoupon) {
         this.couponUsedStock = couponUsedStock;
         this.memberHasCoupon = memberHasCoupon;
         this.couponUsedDate = LocalDateTime.now();

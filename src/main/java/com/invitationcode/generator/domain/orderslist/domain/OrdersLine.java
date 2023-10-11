@@ -30,23 +30,19 @@ public class OrdersLine {
     private String productName;
 
     @Comment(value = "구매 수량")
-    @Column(name = "product_buy_quantity", nullable = false)
-    private Integer productBuyQuantity;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orders_idx", foreignKey = @ForeignKey(name = "fk_ordersList_orders"))
     private Orders orders;
 
     @Builder
-    public OrdersLine(Orders orders, Long productIdx, BigDecimal purchaseMoney, String productName, Integer productBuyQuantity) {
+    public OrdersLine(Orders orders, Long productIdx, BigDecimal purchaseMoney, String productName, int quantity) {
         this.orders = orders;
         this.productIdx = productIdx;
         this.purchaseMoney = new PurchaseMoney(purchaseMoney);
         this.productName = productName;
-        this.productBuyQuantity = productBuyQuantity;
-    }
-
-    public PurchaseMoney purchaseTotalMoney() {
-        return this.purchaseMoney.purchaseTotalMoney(this.productBuyQuantity);
+        this.quantity = quantity;
     }
 }

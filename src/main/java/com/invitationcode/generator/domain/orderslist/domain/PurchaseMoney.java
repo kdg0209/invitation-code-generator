@@ -22,16 +22,8 @@ public class PurchaseMoney {
         setPurchaseMoney(purchaseMoney);
     }
 
-    /**
-     * @return 상품 구매 금액 * 구매한 상품의 갯수
-     * @descriptopn 구매 총 합계 계산 메서드
-     */
-    public PurchaseMoney purchaseTotalMoney(int productBuyQuantity) {
-        return new PurchaseMoney(this.purchaseMoney.multiply(BigDecimal.valueOf(productBuyQuantity)));
-    }
-
     private void setPurchaseMoney(BigDecimal purchaseMoney) {
-        if (purchaseMoney == null) {
+        if (purchaseMoney == null || purchaseMoney.signum() == -1) {
             throw new IllegalArgumentException();
         }
         this.purchaseMoney = purchaseMoney;

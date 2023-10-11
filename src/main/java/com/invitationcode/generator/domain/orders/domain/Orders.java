@@ -2,12 +2,11 @@ package com.invitationcode.generator.domain.orders.domain;
 
 import com.invitationcode.generator.domain.member.domain.Member;
 import com.invitationcode.generator.domain.orderslist.domain.OrdersLine;
-import com.invitationcode.generator.domain.orderslist.domain.PurchaseMoney;
-import com.invitationcode.generator.domain.product.domain.Product;
 import com.invitationcode.generator.global.exception.BusinessException;
 import com.invitationcode.generator.global.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
@@ -16,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,7 +26,7 @@ public class Orders {
     private Long idx;
 
     @Embedded
-    private OrdersMoney ordersMoney;
+    private OrdersTotalMoney ordersTotalMoney;
 
     @Embedded
     private ShippingInfo shippingInfo;
@@ -43,43 +43,36 @@ public class Orders {
     private List<OrdersLine> ordersLines = new ArrayList<>();
 
     @Builder
-    public Orders(Member member, OrdersMoney depositOrdersMoney, OrdersMoney ordersDiscountMoney, ShippingInfo shippingInfo) {
+    public Orders(Member member, OrdersTotalMoney ordersTotalMoney, ShippingInfo shippingInfo) {
         this.member = member;
-        this.ordersMoney = depositOrdersMoney.minus(ordersDiscountMoney.getTotalPrice());
+        this.ordersTotalMoney = ordersTotalMoney;
         this.shippingInfo = shippingInfo;
     }
 
-    public Long getIdx() {
-        return this.idx;
-    }
-
-    /**
-     * @return 상품 구매 금액 * 구매한 상품의 갯수
-     * @descriptopn 주문한 상품을 구매 목록에 담고 구매한 상품의 총 금액을 반환하는 메서드
-     */
-    public PurchaseMoney addOrdersLineAndReturnPurchaseTotalMoney(Product product, Integer productBuyQuantity) {
-        product.decreaseStock(productBuyQuantity);
+    public void addOrdersLine(long productIdx, BigDecimal productMoney, String productName, int quantity) {
         OrdersLine ordersLine = OrdersLine.builder()
                 .orders(this)
-                .productIdx(product.getIdx())
-                .purchaseMoney(product.getMoney())
-                .productName(product.getName())
-                .productBuyQuantity(productBuyQuantity)
+                .productIdx(productIdx)
+                .purchaseMoney(productMoney)
+                .productName(productName)
+                .quantity(quantity)
                 .build();
         this.ordersLines.add(ordersLine);
-
-        return ordersLine.purchaseTotalMoney();
     }
 
-    public void statusChangeByPurchase(OrdersMoney totalPurchaseOrdersMoney) {
-        BigDecimal totalPrice = totalPurchaseOrdersMoney.getTotalPrice();
-        if (this.ordersMoney.isThanEqual(totalPrice)) {
+    public BigDecimal purchaseTotalMoney(BigDecimal productPrice, int quantity) {
+        return productPrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
+    public void statusChangeByPurchase(OrdersTotalMoney totalPurchaseOrdersTotalMoney) {
+        BigDecimal totalPrice = totalPurchaseOrdersTotalMoney.getTotalPrice();
+        if (this.ordersTotalMoney.isThanEqual(totalPrice)) {
             this.status = OrderStatus.PAY_COMPLETED;
         }
-        if (this.ordersMoney.isLessThan(totalPrice)) {
+        if (this.ordersTotalMoney.isLessThan(totalPrice)) {
             this.status = OrderStatus.PAY_WAITING;
         }
-        if (this.ordersMoney.isThanGreater(totalPrice)) {
+        if (this.ordersTotalMoney.isThanGreater(totalPrice)) {
             throw new BusinessException(ErrorCode.TOTAL_PRICE_THAN_PRODUCT_MONEY_EXCEPTION);
         }
     }

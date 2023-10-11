@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class OrdersMoneyTest {
+class OrdersTotalMoneyTest {
 
     @Test
     void 유효한_BigDecimal_값을_사용하여_정상적인_객체를_생성할_수_있다() {
@@ -16,7 +16,7 @@ class OrdersMoneyTest {
         BigDecimal bigDecimal = new BigDecimal("10000");
 
         // when
-        OrdersMoney result = new OrdersMoney(bigDecimal);
+        OrdersTotalMoney result = new OrdersTotalMoney(bigDecimal);
 
         // then
         assertThat(result).isNotNull();
@@ -30,7 +30,7 @@ class OrdersMoneyTest {
         BigDecimal bigDecimal = new BigDecimal("-10000");
 
         // when && then
-        assertThatThrownBy(() -> new OrdersMoney(bigDecimal))
+        assertThatThrownBy(() -> new OrdersTotalMoney(bigDecimal))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -41,7 +41,7 @@ class OrdersMoneyTest {
         BigDecimal bigDecimal = null;
 
         // when && then
-        assertThatThrownBy(() -> new OrdersMoney(bigDecimal))
+        assertThatThrownBy(() -> new OrdersTotalMoney(bigDecimal))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -52,7 +52,7 @@ class OrdersMoneyTest {
         long price = 10000L;
 
         // when
-        OrdersMoney result = new OrdersMoney(price);
+        OrdersTotalMoney result = new OrdersTotalMoney(price);
 
         // then
         assertThat(result).isNotNull();
@@ -66,7 +66,7 @@ class OrdersMoneyTest {
         long price = -10000L;
 
         // when && then
-        assertThatThrownBy(() -> new OrdersMoney(price))
+        assertThatThrownBy(() -> new OrdersTotalMoney(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -77,7 +77,7 @@ class OrdersMoneyTest {
         long price = Long.MAX_VALUE + 1;
 
         // when && then
-        assertThatThrownBy(() -> new OrdersMoney(price))
+        assertThatThrownBy(() -> new OrdersTotalMoney(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -86,11 +86,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("10000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal plusPrice = new BigDecimal("30000");
 
         // when
-        OrdersMoney result = ordersMoney.plus(plusPrice);
+        OrdersTotalMoney result = ordersTotalMoney.plus(plusPrice);
 
         // then
         assertThat(result).isNotNull();
@@ -102,11 +102,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("30000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal plusPrice = new BigDecimal("10000");
 
         // when
-        OrdersMoney result = ordersMoney.minus(plusPrice);
+        OrdersTotalMoney result = ordersTotalMoney.minus(plusPrice);
 
         // then
         assertThat(result).isNotNull();
@@ -118,11 +118,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("30000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("30000");
 
         // when
-        boolean result = ordersMoney.isThanEqual(otherMoney);
+        boolean result = ordersTotalMoney.isThanEqual(otherMoney);
 
         // then
         assertThat(result).isTrue();
@@ -133,11 +133,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("30000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
         // when
-        boolean result = ordersMoney.isThanEqual(otherMoney);
+        boolean result = ordersTotalMoney.isThanEqual(otherMoney);
 
         // then
         assertThat(result).isFalse();
@@ -148,11 +148,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("30000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
         // when
-        boolean result = ordersMoney.isLessThan(otherMoney);
+        boolean result = ordersTotalMoney.isLessThan(otherMoney);
 
         // then
         assertThat(result).isTrue();
@@ -163,11 +163,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("80000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
         // when
-        boolean result = ordersMoney.isLessThan(otherMoney);
+        boolean result = ordersTotalMoney.isLessThan(otherMoney);
 
         // then
         assertThat(result).isFalse();
@@ -178,11 +178,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("80000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
         // when
-        boolean result = ordersMoney.isThanGreater(otherMoney);
+        boolean result = ordersTotalMoney.isThanGreater(otherMoney);
 
         // then
         assertThat(result).isTrue();
@@ -193,11 +193,11 @@ class OrdersMoneyTest {
 
         // given
         BigDecimal price = new BigDecimal("20000");
-        OrdersMoney ordersMoney = new OrdersMoney(price);
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
         // when
-        boolean result = ordersMoney.isThanGreater(otherMoney);
+        boolean result = ordersTotalMoney.isThanGreater(otherMoney);
 
         // then
         assertThat(result).isFalse();

@@ -1,6 +1,6 @@
 package com.invitationcode.generator.domain.orders.controller;
 
-import com.invitationcode.generator.domain.orders.dto.OrdersPurchaseRequestDto;
+import com.invitationcode.generator.domain.orders.dto.OrdersPurchaseRequest;
 import com.invitationcode.generator.domain.orders.service.OrdersService;
 import com.invitationcode.generator.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     @PostMapping
-    public BaseResponse<Long> purchase(@Valid @RequestBody OrdersPurchaseRequestDto requestDto) {
-        Long response = ordersService.purchase(requestDto);
+    public BaseResponse<Long> purchase(@Valid @RequestBody OrdersPurchaseRequest request) {
+        Long response = ordersService.purchase(request);
         return new BaseResponse<>(CODE_201, response);
     }
 }

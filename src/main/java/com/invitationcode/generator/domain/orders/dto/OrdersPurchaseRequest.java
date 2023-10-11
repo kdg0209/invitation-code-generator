@@ -9,15 +9,13 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Getter
-public class OrdersPurchaseRequestDto {
+public class OrdersPurchaseRequest {
 
-    @NotNull
     @Positive
-    private Long memberIdx;
+    private long memberIdx;
 
-    @NotNull
     @Positive
-    private Integer zipcode;
+    private int zipcode;
 
     @NotNull
     private String address;
@@ -33,7 +31,8 @@ public class OrdersPurchaseRequestDto {
 
     @Valid
     @NotEmpty
-    private List<ProductPurchaseListRequestDto> productPurchaseList;
+    private List<ProductPurchaseRequest> productPurchaseList;
 
-    private List<CouponUsedRequestDto> couponUsedList;
+    @Valid
+    private List<CouponUsedRequest> couponUsedList;
 }

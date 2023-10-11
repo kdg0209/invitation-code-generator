@@ -65,7 +65,7 @@ public class MemberHasCoupon {
         this.createdDate = LocalDateTime.now();
     }
 
-    public void usedCoupon(Integer usedCouponStock) {
+    public void usedCoupon(int usedCouponStock) {
         verifyCouponDateExpiration();
         decreaseCouponStock(usedCouponStock);
         createMemberUsedCouponHistory(usedCouponStock);
@@ -78,14 +78,14 @@ public class MemberHasCoupon {
         }
     }
 
-    private void decreaseCouponStock(Integer usedCouponStock) {
-        if (usedCouponStock == null || usedCouponStock < 0 || this.couponStock < usedCouponStock) {
+    private void decreaseCouponStock(int usedCouponStock) {
+        if (usedCouponStock < 0 || this.couponStock < usedCouponStock) {
             throw new BusinessException(ErrorCode.BIG_REQUEST_STOCK_THAN_COUPON_STOCK_EXCEPTION);
         }
         this.couponStock -= usedCouponStock;
     }
 
-    private void createMemberUsedCouponHistory(Integer usedCouponStock) {
+    private void createMemberUsedCouponHistory(int usedCouponStock) {
         this.memberUsedCouponHistory = MemberUsedCouponHistory.builder()
                 .couponUsedStock(usedCouponStock)
                 .memberHasCoupon(this)

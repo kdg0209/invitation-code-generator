@@ -9,33 +9,33 @@ import java.math.BigDecimal;
 
 @Getter
 @Embeddable
-public class OrdersMoney {
+public class OrdersTotalMoney {
 
-    public static final OrdersMoney ZERO = new OrdersMoney();
+    public static final OrdersTotalMoney ZERO = new OrdersTotalMoney();
     private static final int DEFAULT_MONEY = 0;
 
     @Comment(value = "총 결제 금액")
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
-    private OrdersMoney() {
+    private OrdersTotalMoney() {
         this.totalPrice = new BigDecimal(DEFAULT_MONEY);
     }
 
-    public OrdersMoney(BigDecimal totalPrice) {
+    public OrdersTotalMoney(BigDecimal totalPrice) {
         setTotalPrice(totalPrice);
     }
 
-    public OrdersMoney(long totalPrice) {
+    public OrdersTotalMoney(long totalPrice) {
         setTotalPrice(totalPrice);
     }
 
-    public OrdersMoney plus(BigDecimal totalPrice) {
-        return new OrdersMoney(this.totalPrice.add(totalPrice));
+    public OrdersTotalMoney plus(BigDecimal totalPrice) {
+        return new OrdersTotalMoney(this.totalPrice.add(totalPrice));
     }
 
-    public OrdersMoney minus(BigDecimal totalPrice) {
-        return new OrdersMoney(this.totalPrice.subtract(totalPrice));
+    public OrdersTotalMoney minus(BigDecimal totalPrice) {
+        return new OrdersTotalMoney(this.totalPrice.subtract(totalPrice));
     }
 
     public boolean isThanEqual(BigDecimal totalPrice) {

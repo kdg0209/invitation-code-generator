@@ -150,21 +150,6 @@ class ProductTest {
     }
 
     @Test
-    void NULL인_값으로_재고를_감소시킬_경우_예외가_발생한다() {
-
-        // given
-        String name = "mac book";
-        int stock = 10;
-        Money money = new Money(1000);
-        Product product = new Product(name, stock, money);
-
-        // when && then
-        Integer productBuyQuantity = null;
-        assertThatThrownBy(() -> product.decreaseStock(productBuyQuantity))
-                .isInstanceOf(BusinessException.class);
-    }
-
-    @Test
     void 상품의_가격을_업데이트할_수_있다() {
 
         // given
@@ -194,6 +179,6 @@ class ProductTest {
         product.delete();
 
         // then
-        assertThat(product.getIsDeleted()).isTrue();
+        assertThat(product.isDeleted()).isTrue();
     }
 }

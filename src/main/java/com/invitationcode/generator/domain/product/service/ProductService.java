@@ -3,7 +3,7 @@ package com.invitationcode.generator.domain.product.service;
 import com.invitationcode.generator.domain.product.dao.ProductDao;
 import com.invitationcode.generator.domain.product.domain.Money;
 import com.invitationcode.generator.domain.product.domain.Product;
-import com.invitationcode.generator.domain.product.dto.ProductCreateRequestDto;
+import com.invitationcode.generator.domain.product.dto.ProductCreateRequest;
 import com.invitationcode.generator.domain.product.dto.ProductUpdateRequestDto;
 import com.invitationcode.generator.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ProductService {
     private final ProductDao productDao;
     private final ProductRepository productRepository;
 
-    public Long create(ProductCreateRequestDto request) {
+    public Long create(ProductCreateRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
                 .stock(request.getStock())
