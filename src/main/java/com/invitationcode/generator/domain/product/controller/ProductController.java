@@ -1,6 +1,6 @@
 package com.invitationcode.generator.domain.product.controller;
 
-import com.invitationcode.generator.domain.product.dto.ProductCreateRequestDto;
+import com.invitationcode.generator.domain.product.dto.ProductCreateRequest;
 import com.invitationcode.generator.domain.product.dto.ProductUpdateRequestDto;
 import com.invitationcode.generator.domain.product.service.ProductService;
 import com.invitationcode.generator.global.response.BaseResponse;
@@ -20,7 +20,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public BaseResponse<Long> create(@Valid @RequestBody ProductCreateRequestDto requestDto) {
+    public BaseResponse<Long> create(@Valid @RequestBody ProductCreateRequest requestDto) {
         Long response = productService.create(requestDto);
         return new BaseResponse<>(CODE_201, response);
     }

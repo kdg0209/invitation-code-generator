@@ -25,19 +25,20 @@ public class Product {
 
     @Comment(value = "재고")
     @Column(name = "stock", nullable = false)
-    private Integer stock;
+    private int stock;
 
     @Embedded
     private Money money;
 
     @Comment(value = "삭제 여부")
     @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     @Builder
     public Product(String name, int stock, Money money) {
         this.name = name;
         this.money = money;
+        this.isDeleted = false;
         setStock(stock);
     }
 
@@ -56,8 +57,8 @@ public class Product {
         setStock(stock);
     }
 
-    public void decreaseStock(Integer productBuyQuantity) {
-        if (productBuyQuantity == null || this.stock < productBuyQuantity) {
+    public void decreaseStock(int productBuyQuantity) {
+        if (this.stock < productBuyQuantity) {
             throw new BusinessException(ErrorCode.BIG_REQUEST_QUANTITY_THAN_PRODUCT_STOCK_EXCEPTION);
         }
         this.stock -= productBuyQuantity;
