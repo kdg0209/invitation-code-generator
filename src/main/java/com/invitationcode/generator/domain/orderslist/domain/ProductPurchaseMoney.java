@@ -12,20 +12,20 @@ import java.math.BigDecimal;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PurchaseMoney {
+public class ProductPurchaseMoney {
 
     @Comment(value = "상품 구매 금액")
-    @Column(name = "purchase_money", nullable = false)
-    private BigDecimal purchaseMoney;
+    @Column(name = "product_money", nullable = false)
+    private BigDecimal productMoney;
 
-    public PurchaseMoney(BigDecimal purchaseMoney) {
-        setPurchaseMoney(purchaseMoney);
+    public ProductPurchaseMoney(BigDecimal productMoney) {
+        setPurchaseMoney(productMoney);
     }
 
-    private void setPurchaseMoney(BigDecimal purchaseMoney) {
-        if (purchaseMoney == null || purchaseMoney.signum() == -1) {
+    private void setPurchaseMoney(BigDecimal productMoney) {
+        if (productMoney == null || productMoney.signum() == -1) {
             throw new IllegalArgumentException();
         }
-        this.purchaseMoney = purchaseMoney;
+        this.productMoney = productMoney;
     }
 }

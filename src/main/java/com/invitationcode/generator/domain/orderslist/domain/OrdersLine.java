@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public class OrdersLine {
     private Long idx;
 
     @Embedded
-    private PurchaseMoney purchaseMoney;
+    private ProductPurchaseMoney productPurchaseMoney;
 
     @Comment(value = "상품 번호")
     @Column(name = "product_idx", nullable = false)
@@ -38,11 +39,33 @@ public class OrdersLine {
     private Orders orders;
 
     @Builder
-    public OrdersLine(Orders orders, Long productIdx, BigDecimal purchaseMoney, String productName, int quantity) {
+    public OrdersLine(Orders orders, Long productIdx, String productName, BigDecimal purchaseMoney, int quantity) {
         this.orders = orders;
+        this.productPurchaseMoney = new ProductPurchaseMoney(purchaseMoney);
+
+        setProductIdx(productIdx);
+        setProductName(productName);
+        setQuantity(quantity);
+    }
+
+    private void setProductIdx(Long productIdx) {
+        if (productIdx == null || productIdx < 1L) {
+            throw new IllegalArgumentException();
+        }
         this.productIdx = productIdx;
-        this.purchaseMoney = new PurchaseMoney(purchaseMoney);
+    }
+
+    private void setProductName(String productName) {
+        if (!StringUtils.hasText(productName)) {
+            throw new IllegalArgumentException();
+        }
         this.productName = productName;
+    }
+
+    private void setQuantity(int quantity) {
+        if (quantity < 1) {
+            throw new IllegalArgumentException();
+        }
         this.quantity = quantity;
     }
 }
