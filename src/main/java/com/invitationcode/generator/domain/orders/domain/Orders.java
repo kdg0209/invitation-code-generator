@@ -1,7 +1,6 @@
 package com.invitationcode.generator.domain.orders.domain;
 
 import com.invitationcode.generator.domain.member.domain.Member;
-import com.invitationcode.generator.domain.orderslist.domain.OrdersLine;
 import com.invitationcode.generator.global.exception.BusinessException;
 import com.invitationcode.generator.global.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -60,19 +59,13 @@ public class Orders {
         this.ordersLines.add(ordersLine);
     }
 
-    public BigDecimal purchaseTotalMoney(BigDecimal productPrice, int quantity) {
-        return productPrice.multiply(BigDecimal.valueOf(quantity));
-    }
-
-    public void statusChangeByPurchase(OrdersTotalMoney totalPurchaseOrdersTotalMoney) {
-        BigDecimal totalPrice = totalPurchaseOrdersTotalMoney.getTotalPrice();
+    public void statusChangeByPurchase(OrdersTotalMoney totalMoney) {
+        BigDecimal totalPrice = totalMoney.getTotalPrice();
         if (this.ordersTotalMoney.isThanEqual(totalPrice)) {
             this.status = OrderStatus.PAY_COMPLETED;
-        }
-        if (this.ordersTotalMoney.isLessThan(totalPrice)) {
+        } else if (!this.ordersTotalMoney.isLessThan(totalPrice)) {
             this.status = OrderStatus.PAY_WAITING;
-        }
-        if (this.ordersTotalMoney.isThanGreater(totalPrice)) {
+        } else if (!this.ordersTotalMoney.isThanGreater(totalPrice)) {
             throw new BusinessException(ErrorCode.TOTAL_PRICE_THAN_PRODUCT_MONEY_EXCEPTION);
         }
     }

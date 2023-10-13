@@ -1,4 +1,4 @@
-package com.invitationcode.generator.domain.orderslist.domain;
+package com.invitationcode.generator.domain.orders.domain;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -12,9 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.invitationcode.generator.domain.member.domain.Email;
 import com.invitationcode.generator.domain.member.domain.Member;
 import com.invitationcode.generator.domain.member.domain.Password;
-import com.invitationcode.generator.domain.orders.domain.Orders;
-import com.invitationcode.generator.domain.orders.domain.OrdersTotalMoney;
-import com.invitationcode.generator.domain.orders.domain.ShippingInfo;
 
 class OrdersLineTest {
 
@@ -38,7 +35,17 @@ class OrdersLineTest {
 			.nickName(nickName)
 			.build();
 
-		ShippingInfo shippingInfo = ShippingInfo.builder().build();
+		Integer zipcode = 100;
+		String address = "Seoul";
+		String addressDetail = "강남구";
+		String message = "배송전 연락바랍니다.";
+
+		ShippingInfo shippingInfo = ShippingInfo.builder()
+			.zipcode(zipcode)
+			.address(address)
+			.addressDetail(addressDetail)
+			.message(message)
+			.build();
 
 		orders = Orders.builder()
 			.member(member)

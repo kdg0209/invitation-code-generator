@@ -72,6 +72,10 @@ public class Product {
         this.isDeleted = true;
     }
 
+    public BigDecimal purchaseTotalMoney(int quantity) {
+        return this.money.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
+
     private void setStock(int stock) {
         if (stock < 0) {
             throw new IllegalArgumentException();

@@ -70,8 +70,8 @@ public class OrdersService {
         for (ProductPurchaseRequest request : productPurchaseRequest) {
             Product product = productDao.findByIdx(request.getProductIdx());
             product.decreaseStock(request.getProductBuyQuantity());
+            BigDecimal purchaseTotalMoney = product.purchaseTotalMoney(request.getProductBuyQuantity());
             orders.addOrdersLine(product.getIdx(), product.getMoney(), product.getName(), request.getProductBuyQuantity());
-            BigDecimal purchaseTotalMoney = orders.purchaseTotalMoney(product.getMoney(), request.getProductBuyQuantity());
             result = result.plus(purchaseTotalMoney);
         }
         return result;

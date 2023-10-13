@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -28,14 +29,35 @@ public class ShippingInfo {
     private String addressDetail;
 
     @Comment(value = "배송 요청 사항")
-    @Column(name = "message", nullable = false)
+    @Column(name = "message")
     private String message;
 
     @Builder
     public ShippingInfo(int zipcode, String address, String addressDetail, String message) {
-        this.zipcode = zipcode;
-        this.address = address;
-        this.addressDetail = addressDetail;
+        setZipcode(zipcode);
+        setAddress(address);
+        setAddressDetail(addressDetail);
         this.message = message;
+    }
+
+    private void setZipcode(int zipcode) {
+        if (zipcode < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.zipcode = zipcode;
+    }
+
+    private void setAddress(String address) {
+        if (!StringUtils.hasText(address)) {
+            throw new IllegalArgumentException();
+        }
+        this.address = address;
+    }
+
+    private void setAddressDetail(String addressDetail) {
+        if (!StringUtils.hasText(addressDetail)) {
+            throw new IllegalArgumentException();
+        }
+        this.addressDetail = addressDetail;
     }
 }

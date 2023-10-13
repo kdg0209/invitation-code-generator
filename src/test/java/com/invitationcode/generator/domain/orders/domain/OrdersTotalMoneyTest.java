@@ -144,25 +144,10 @@ class OrdersTotalMoneyTest {
     }
 
     @Test
-    void isLessThan_메서드를_사용하여_특정_금액_보다_작으면_TRUE_를_반환한다() {
+    void isLessThan_메서드를_사용하여_나의_금액이_특정_금액_보다_크다면_FALSE_를_반환한다() {
 
         // given
-        BigDecimal price = new BigDecimal("30000");
-        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
-        BigDecimal otherMoney = new BigDecimal("50000");
-
-        // when
-        boolean result = ordersTotalMoney.isLessThan(otherMoney);
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void isLessThan_메서드를_사용하여_특정_금액_보다_크다면_FALSE_를_반환한다() {
-
-        // given
-        BigDecimal price = new BigDecimal("80000");
+        BigDecimal price = new BigDecimal("30000000");
         OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
@@ -174,10 +159,25 @@ class OrdersTotalMoneyTest {
     }
 
     @Test
-    void isThanGreater_메서드를_사용하여_특정_금액_보다_크다면_TRUE_를_반환한다() {
+    void isLessThan_메서드를_사용하여_나의_금액이_특정_금액_보다_작다면_TRUE_를_반환한다() {
 
         // given
-        BigDecimal price = new BigDecimal("80000");
+        BigDecimal price = new BigDecimal("20000");
+        OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
+        BigDecimal otherMoney = new BigDecimal("50000000");
+
+        // when
+        boolean result = ordersTotalMoney.isLessThan(otherMoney);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void isThanGreater_메서드를_사용하여_나의_금액이_특정_금액_보다_크다면_TRUE_를_반환한다() {
+
+        // given
+        BigDecimal price = new BigDecimal("8000000");
         OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
         BigDecimal otherMoney = new BigDecimal("50000");
 
@@ -189,12 +189,12 @@ class OrdersTotalMoneyTest {
     }
 
     @Test
-    void isThanGreater_메서드를_사용하여_특정_금액_보다_작다면_FALSE_를_반환한다() {
+    void isThanGreater_메서드를_사용하여_나의_금액이_특정_금액_보다_작다면_FALSE_를_반환한다() {
 
         // given
-        BigDecimal price = new BigDecimal("20000");
+        BigDecimal price = new BigDecimal("10000");
         OrdersTotalMoney ordersTotalMoney = new OrdersTotalMoney(price);
-        BigDecimal otherMoney = new BigDecimal("50000");
+        BigDecimal otherMoney = new BigDecimal("5000000");
 
         // when
         boolean result = ordersTotalMoney.isThanGreater(otherMoney);

@@ -1,4 +1,4 @@
-package com.invitationcode.generator.domain.orderslist.domain;
+package com.invitationcode.generator.domain.orders.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
