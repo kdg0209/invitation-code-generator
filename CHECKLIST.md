@@ -20,13 +20,13 @@
 - [v] 멤버 초대의 ReceiverEmail 클래스 테스트 코드 추가
 
 ### 주문 클래스
-- [ ] Orders 클래스 테스트 코드 추가
+- [v] Orders 클래스 테스트 코드 추가
 - [v] Orders OrdersMoney 클래스 테스트 코드 추가
 - [v] Orders ShippingInfo 클래스 테스트 코드 추가
 
 ### 주문 목록 클래스
-- [ ] OrdersLine 클래스 테스트 코드 추가
-- [ ] PurchaseMoney 클래스 테스트 코드 추가
+- [v] OrdersLine 클래스 테스트 코드 추가
+- [v] PurchaseMoney 클래스 테스트 코드 추가
 
 ### 상품 클래스
 - [v] Product 클래스 테스트 코드 추가
